@@ -1,23 +1,3 @@
-attack-monitor — User Manual (English)
-A defensive ("blue team") tool for a Linux server you own or are formally
-authorised to manage. It continuously watches for signs of attack (SSH
-brute-force, suspicious connections, unexpected open ports, suspicious
-processes) and can lock SSH down to an allow-list of IPs, while letting you keep
-working during maintenance.
-Core logic is in C (`monitor_core.c`) — aggregation, IP validation, allow-list matching.
-A Python driver (`monitor.py`) calls the C shared library via `ctypes` and runs the loop, CLI and config.
----
-⚠️ Read this first (lockout warning)
-This tool can modify your firewall and restrict SSH to specific IPs. A wrong
-setting can lock you (and your team) out of the server. Before using
-`apply-firewall --yes` on a real server:
-Only target a server you own / are formally authorised to manage.
-Get manager / security-team approval for production use.
-Test in a throwaway VM or staging environment first.
-Keep a non-SSH recovery path (console / KVM / cloud serial access).
-Always run `apply-firewall` (dry-run) and check the output before `--yes`.
-The plain `run` (monitoring) command is safe — it only reads logs and prints alerts.
----
 ❗ Permissions rule: run every command with `sudo`
 By default this tool reads `/var/log/auth.log` and writes to `/etc/attack-monitor/`
 and `/var/log/`, which are root-owned. Without `sudo` you will hit:
