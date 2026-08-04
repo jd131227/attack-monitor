@@ -1,0 +1,25 @@
+[Unit]
+Description=Server Attack Monitor (attack-monitor)
+After=network.target
+
+[Service]
+Type=simple
+# Adjust the path to wherever you installed the tool.
+WorkingDirectory=/opt/attack-monitor
+ExecStart=/usr/bin/python3 /opt/attack-monitor/monitor.py --config /opt/attack-monitor/monitor.conf run
+Restart=on-failure
+RestartSec=5
+# Root is assumed for reading auth logs and operating the firewall.
+# Tighten to least privilege according to your operations policy.
+User=root
+
+# --- Light hardening (safe defaults; relax if they conflict with your setup) ---
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=true
+PrivateTmp=true
+# The tool needs to write its logs, backups and the allow list:
+ReadWritePaths=/var/log /var/lib/attack-monitor /etc/attack-monitor
+
+[Install]
+WantedBy=multi-user.target
